@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 64" width="640" height="64">
+  <style>
+    .base { fill: #4a5061; }
+    .accent { fill: #2891b8; }
+    @media (prefers-color-scheme: dark) {
+      .base { fill: #c8d1e0; }
+      .accent { fill: #7eb8c4; }
+    }
+    text {
+      font-family: ui-monospace, "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+      font-size: 34px;
+      font-weight: 700;
+    }
+  </style>
+  <text x="320" y="44" text-anchor="middle">
+    <tspan class="base">book</tspan><tspan class="accent">mark</tspan><tspan class="base"> → google</tspan><tspan class="accent">sheet</tspan>
+  </text>
+</svg>
