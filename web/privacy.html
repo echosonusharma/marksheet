@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy — Marksheet</title>
+  <meta name="description" content="Marksheet does not collect, store, or share any user data. Read the full privacy policy." />
+  <link rel="canonical" href="https://marksheet.echosonusharma.in/privacy" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .page {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 72px 48px 96px;
+    }
+
+    .page-label {
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent-hi);
+      letter-spacing: -.02em;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .meta {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 52px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lead {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.75;
+      margin-bottom: 52px;
+      padding: 20px 24px;
+      border-left: 2px solid var(--accent);
+      background: var(--panel-2);
+    }
+
+    h2 {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin: 44px 0 16px;
+    }
+
+    p {
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.75;
+    }
+
+    strong { color: var(--text); font-weight: 500; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4px 0 8px;
+      font-size: 12px;
+    }
+
+    tr { border-bottom: 1px solid var(--border); }
+    tr:last-child { border-bottom: none; }
+
+    td {
+      padding: 11px 16px;
+      color: var(--muted);
+      vertical-align: middle;
+    }
+
+    td:first-child {
+      width: 72px;
+      color: var(--text);
+      background: var(--panel);
+      font-size: 14px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+
+    .data-list {
+      list-style: none;
+      border: 1px solid var(--border);
+      margin: 4px 0 8px;
+    }
+
+    .data-list li {
+      padding: 12px 16px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+    }
+
+    .data-list li:last-child { border-bottom: none; }
+
+    .data-list li::before {
+      content: "—";
+      color: var(--border);
+      flex-shrink: 0;
+    }
+
+    .scope-box {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      padding: 16px 20px;
+      margin: 4px 0 8px;
+      font-size: 12px;
+    }
+
+    .scope-box code {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .page { padding: 40px 20px 64px; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">marksheet</a>
+  <a class="nav-back" href="/">← home</a>
+</nav>
+
+<div class="page">
+  <p class="page-label">// legal</p>
+  <h1>Privacy Policy</h1>
+  <p class="meta">Effective: June 2026 &nbsp;·&nbsp; Marksheet v1.0</p>
+
+  <p class="lead">Marksheet does not collect, store, or transmit any of your personal data. There is no backend server, no database, no analytics, and no telemetry of any kind.</p>
+
+  <h2>What Marksheet can and cannot do</h2>
+  <table>
+    <tr><td>✅</td><td>Write rows to the Google Sheet you choose</td></tr>
+    <tr><td>✅</td><td>Read URLs from that sheet to detect duplicates</td></tr>
+    <tr><td>❌</td><td>See any other files in your Google Drive</td></tr>
+    <tr><td>❌</td><td>Access your Google account details or profile</td></tr>
+    <tr><td>❌</td><td>Send your data to any server or third party</td></tr>
+    <tr><td>❌</td><td>Track what pages you visit</td></tr>
+    <tr><td>❌</td><td>Run analytics or telemetry of any kind</td></tr>
+  </table>
+
+  <h2>Data stored on your device</h2>
+  <p>The following is saved in your browser's local storage only. It never leaves your machine. Uninstalling the extension deletes it permanently.</p>
+  <ul class="data-list">
+    <li>Your sheet configurations — spreadsheet URL, tab name, column layout</li>
+    <li>A cached list of URLs already saved, used for instant duplicate detection</li>
+    <li>A short-lived Google OAuth token issued by Google, expires automatically</li>
+  </ul>
+
+  <h2>Google account access</h2>
+  <p>Marksheet requests a single Google OAuth scope:</p>
+  <div class="scope-box">
+    <code>https://www.googleapis.com/auth/spreadsheets</code>
+    Read and write access to Google Sheets only. No Gmail, no Drive, no Calendar, no profile data.
+  </div>
+  <p>You can revoke this access at any time at <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">myaccount.google.com/permissions</a>.</p>
+
+  <h2>How data flows</h2>
+  <p>When you click save, your browser sends the tab URL, title, and timestamp <strong>directly to the Google Sheets API</strong> using your own credentials. The data goes from your browser to your sheet — nowhere else.</p>
+
+  <h2>Third parties</h2>
+  <p>Marksheet has no third-party dependencies, no tracking scripts, and no CDN calls at runtime. The only external service it communicates with is the Google Sheets API.</p>
+
+  <h2>Contact</h2>
+  <p>Questions? Open an issue at <a href="https://github.com/echosonusharma/marksheet" target="_blank" rel="noopener">github.com/echosonusharma/marksheet</a>.</p>
+</div>
+
+<footer>
+  <p>marksheet — <a href="https://github.com/echosonusharma/marksheet" target="_blank" rel="noopener">open source</a> · <a href="/privacy">privacy</a></p>
+  <p style="color:var(--border)">no tracking · no analytics · no nonsense</p>
+</footer>
+
+</body>
+</html>

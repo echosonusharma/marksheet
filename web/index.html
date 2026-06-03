@@ -65,7 +65,7 @@
     },
     "codeRepository": "https://github.com/echosonusharma/marksheet",
     "license": "https://opensource.org/licenses/MIT",
-    "privacyPolicy": "https://github.com/echosonusharma/marksheet/blob/main/PRIVACY.md"
+    "privacyPolicy": "https://marksheet.echosonusharma.in/privacy"
   }
   </script>
 
@@ -119,35 +119,9 @@
   }
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
   <style>
-    :root {
-      --bg:        #1c2230;
-      --panel:     #2a3142;
-      --panel-2:   #232938;
-      --border:    #3a4356;
-      --frame:     #8a9bb0;
-      --text:      #c8d1e0;
-      --muted:     #7d8ba0;
-      --accent:    #7eb8c4;
-      --accent-hi: #a8d4dc;
-      --ok:        #6cd49a;
-      --err:       #e07878;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
-      font-size: 13px;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
+    body { line-height: 1.6; }
 
     /* ---- grid lines background ---- */
     body::before {
@@ -164,56 +138,6 @@
     }
 
     main { position: relative; z-index: 1; }
-
-    /* ---- utilities ---- */
-    .label {
-      font-size: 10px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .accent { color: var(--accent); }
-    .ok     { color: var(--ok); }
-
-    /* ---- nav ---- */
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 48px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .nav-logo {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--accent-hi);
-      text-decoration: none;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 11px;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-      transition: color .15s;
-    }
-
-    .nav-links a:hover { color: var(--text); }
 
     /* ---- hero ---- */
     .hero {
@@ -271,32 +195,6 @@
       line-height: 1.7;
       margin-bottom: 44px;
     }
-
-    .btn {
-      display: inline-block;
-      background: var(--accent);
-      color: var(--bg);
-      font: 600 11px/1 "JetBrains Mono", monospace;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-      text-decoration: none;
-      padding: 14px 28px;
-      border: none;
-      cursor: pointer;
-      transition: background .15s;
-    }
-
-    .btn:hover { background: var(--accent-hi); }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      margin-left: 12px;
-      transition: color .15s, border-color .15s;
-    }
-
-    .btn-ghost:hover { color: var(--text); border-color: var(--frame); }
 
     /* ---- terminal demo ---- */
     .terminal {
@@ -361,14 +259,6 @@
       max-width: 860px;
       margin: 0 auto;
       padding: 80px 48px;
-    }
-
-    .section-label {
-      font-size: 10px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 10px;
     }
 
     h2 {
@@ -462,32 +352,9 @@
       line-height: 1.65;
     }
 
-    /* ---- footer ---- */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 28px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    footer p {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    footer a {
-      color: var(--muted);
-      text-decoration: none;
-      transition: color .15s;
-    }
-
-    footer a:hover { color: var(--accent); }
-
     /* ---- responsive ---- */
     @media (max-width: 640px) {
-      nav, section, .hero, .terminal { padding-left: 20px; padding-right: 20px; }
-      footer { padding-left: 20px; padding-right: 20px; flex-direction: column; gap: 12px; }
+      section, .hero, .terminal { padding-left: 20px; padding-right: 20px; }
       .steps, .features { grid-template-columns: 1fr; }
       .step-connector { display: none; }
       h1 { font-size: 32px; }
@@ -654,7 +521,7 @@
 </main>
 
 <footer>
-  <p>marksheet — <a href="https://github.com/echosonusharma/marksheet" target="_blank" rel="noopener">open source</a> · <a href="https://github.com/echosonusharma/marksheet/blob/main/PRIVACY.md" target="_blank" rel="noopener">privacy</a></p>
+  <p>marksheet — <a href="https://github.com/echosonusharma/marksheet" target="_blank" rel="noopener">open source</a> · <a href="https://marksheet.echosonusharma.in/privacy" target="_blank" rel="noopener">privacy</a></p>
   <p style="color:var(--border)">no tracking · no analytics · no nonsense</p>
 </footer>
 
