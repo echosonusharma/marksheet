@@ -37,6 +37,10 @@ function cacheKey(sheetId, tabName, colNum) {
   return `${sheetId}::${tabName}::${colNum}`;
 }
 
+function a1Range(tabName, col) {
+  return `'${tabName.replace(/'/g, "''")}'!${col}`;
+}
+
 // ---- Config storage ----
 let legacyMigrated = false;
 async function migrateLegacy() {
@@ -61,16 +65,17 @@ async function getActiveConfig() {
 }
 
 // ---- Sheets API ----
-async function readColumn(sheetId, tabName, colNum) {
-  const range = encodeURIComponent(`${tabName}!${colNumToLetter(colNum)}:${colNumToLetter(colNum)}`);
+async function readColumn(sheetId, tabName, colNum, fetchOpts = {}) {
+  const col = colNumToLetter(colNum);
+  const range = encodeURIComponent(a1Range(tabName, `${col}:${col}`));
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`;
-  const data = await apiFetch(url);
+  const data = await apiFetch(url, fetchOpts);
   return (data.values || []).map((r) => r[0] || "");
 }
 
 async function appendRow(sheetId, tabName, row) {
-  const range = encodeURIComponent(`${tabName}!A1`);
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}:append?valueInputOption=USER_ENTERED`;
+  const range = encodeURIComponent(a1Range(tabName, "A1"));
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}:append?valueInputOption=RAW`;
   return apiFetch(url, { method: "POST", body: JSON.stringify({ values: [row] }) });
 }
 
@@ -88,7 +93,7 @@ async function refreshUrlCache() {
   const cfg = await getActiveConfig();
   if (!cfg?.sheetId || !cfg?.tabName || !cfg?.mapping?.url) return null;
   try {
-    const urls = await readColumn(cfg.sheetId, cfg.tabName, cfg.mapping.url);
+    const urls = await readColumn(cfg.sheetId, cfg.tabName, cfg.mapping.url, { interactive: false });
     const cache = {
       key: cacheKey(cfg.sheetId, cfg.tabName, cfg.mapping.url),
       urls,
@@ -175,6 +180,7 @@ function openSidePanelSync(windowId) {
 // Cached config-presence flag so the action click handler can decide whether
 // to open the panel (no config) or save (has config) synchronously.
 let hasActiveConfig = false;
+let activeConfigReady = recomputeHasActive();
 async function recomputeHasActive() {
   try {
     const o = await chrome.storage.local.get([CONFIGS_KEY, ACTIVE_KEY]);
@@ -185,8 +191,17 @@ async function recomputeHasActive() {
     console.error("Marksheet recomputeHasActive:", e);
     hasActiveConfig = false;
   }
+  updateSetupBadge();
 }
-recomputeHasActive();
+
+function updateSetupBadge() {
+  if (hasActiveConfig) {
+    chrome.action.setBadgeText({ text: "" });
+  } else {
+    chrome.action.setBadgeBackgroundColor({ color: "#e07878" });
+    chrome.action.setBadgeText({ text: "!" });
+  }
+}
 
 // Single-flight lock so rapid double-clicks can't append duplicate rows.
 let saveInFlight = null;
@@ -251,7 +266,6 @@ async function savePageInner(tab) {
 }
 
 chrome.action.onClicked.addListener((tab) => {
-  // First time / no setup → open side panel synchronously (gesture valid).
   if (!hasActiveConfig) {
     openSidePanelSync(tab.windowId);
     return;
@@ -306,13 +320,18 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   }
 });
 
-// Invalidate cache when active or stored configs change
+// Invalidate cache when active or stored configs change — debounced to avoid
+// parallel refreshes when the user saves settings rapidly.
+let cacheRefreshTimer = null;
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
   if (changes[ACTIVE_KEY] || changes[CONFIGS_KEY]) {
-    recomputeHasActive();
-    chrome.storage.local.remove(URL_CACHE_KEY)
-      .then(() => refreshUrlCache())
-      .catch((e) => console.error("Marksheet onChanged refresh:", e));
+    activeConfigReady = recomputeHasActive();
+    clearTimeout(cacheRefreshTimer);
+    cacheRefreshTimer = setTimeout(() => {
+      chrome.storage.local.remove(URL_CACHE_KEY)
+        .then(() => refreshUrlCache())
+        .catch((e) => console.error("Marksheet onChanged refresh:", e));
+    }, 1000);
   }
 });

@@ -20,12 +20,7 @@ function getRedirectURL() {
 function parseFragment(url) {
   const i = url.indexOf("#");
   if (i < 0) return {};
-  const out = {};
-  for (const kv of url.slice(i + 1).split("&")) {
-    const [k, v] = kv.split("=");
-    out[decodeURIComponent(k)] = decodeURIComponent(v || "");
-  }
-  return out;
+  return Object.fromEntries(new URLSearchParams(url.slice(i + 1)));
 }
 
 function launchAuth(interactive) {
@@ -68,16 +63,19 @@ async function clearToken() {
   await chrome.storage.local.remove(TOKEN_KEY);
 }
 
-export async function getToken() {
+export async function getToken(interactive = true) {
   const cached = await loadCachedToken();
   if (cached && cached.expiresAt > Date.now()) return cached.token;
 
-  // Try silent first.
   try {
     const t = await launchAuth(false);
     await saveToken(t);
     return t.token;
-  } catch {
+  } catch (e) {
+    // Only go interactive for errors that genuinely require user action.
+    // Never prompt from a background context (alarm, onStartup, etc.).
+    const recoverable = /interaction_required|consent_required|login_required/.test(e.message);
+    if (!interactive || !recoverable) throw e;
     const t = await launchAuth(true);
     await saveToken(t);
     return t.token;
@@ -89,11 +87,12 @@ async function sleep(ms) {
 }
 
 export async function apiFetch(url, opts = {}, attempt = 0) {
-  const token = await getToken();
+  const { interactive = true, ...fetchOpts } = opts;
+  const token = await getToken(interactive);
   const res = await fetch(url, {
-    ...opts,
+    ...fetchOpts,
     headers: {
-      ...(opts.headers || {}),
+      ...(fetchOpts.headers || {}),
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },

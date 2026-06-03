@@ -2,7 +2,7 @@ import { apiFetch } from "../auth.js";
 
 const CONFIGS_KEY = "configs";
 const ACTIVE_KEY = "activeId";
-const COL_COUNT = 26;
+const COL_COUNT = 52;
 
 const $ = (id) => document.getElementById(id);
 const $configSel = $("configSel");
@@ -10,7 +10,6 @@ const $newConfig = $("newConfig");
 const $deleteConfig = $("deleteConfig");
 const $saveBtn = $("saveBtn");
 const $status = $("status");
-const $tabInfo = $("tabInfo");
 const $cfgName = $("cfgName");
 const $sheetInput = $("sheetInput");
 const $sheetInfo = $("sheetInfo");
@@ -89,12 +88,7 @@ function refreshColSelectors(preserve) {
 function renderConfigList() {
   $configSel.innerHTML = "";
   const ids = Object.keys(configs);
-  if (!ids.length) {
-    const o = document.createElement("option");
-    o.textContent = "— none —";
-    $configSel.appendChild(o);
-    return;
-  }
+  if (!ids.length) return;
   ids.forEach((id) => {
     const o = document.createElement("option");
     o.value = id;
@@ -187,15 +181,6 @@ async function persist() {
   }
 }
 
-async function refreshTabInfo() {
-  try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    $tabInfo.textContent = tab?.title ? `${tab.title}\n${tab.url}` : (tab?.url || "—");
-  } catch {
-    $tabInfo.textContent = "—";
-  }
-}
-
 async function updateCacheInfo() {
   try {
     const o = await chrome.storage.local.get("urlCache");
@@ -222,11 +207,20 @@ async function init() {
       await chrome.storage.local.remove("settings");
     }
     renderConfigList();
-    if (activeId && configs[activeId]) await loadConfigIntoForm(activeId);
+    if (activeId && configs[activeId]) {
+      await loadConfigIntoForm(activeId);
+    } else if (!Object.keys(configs).length) {
+      const id = newId();
+      configs[id] = { name: "", mapping: {}, additionType: "append" };
+      activeId = id;
+      renderConfigList();
+      await loadConfigIntoForm(id);
+      await persist();
+      $cfgName.focus();
+    }
   } catch (e) {
     setStatus(`Init failed: ${e.message}`, "err");
   }
-  await refreshTabInfo();
   await updateCacheInfo();
 }
 
@@ -258,11 +252,11 @@ $deleteConfig.addEventListener("click", async () => {
   setStatus("Deleted", "ok");
 });
 
-$sheetInput.addEventListener("change", onSheetChange);
 $sheetInput.addEventListener("blur", onSheetChange);
 
 $save.addEventListener("click", async () => {
   if (!activeId) return setStatus("Create a config first", "err");
+  if (!sheetId && $sheetInput.value.trim()) await onSheetChange();
   if (!sheetId) return setStatus("Pick a valid spreadsheet first", "err");
   configs[activeId] = {
     name: $cfgName.value.trim() || sheetName || "unnamed",
@@ -317,11 +311,6 @@ $refresh.addEventListener("click", async () => {
   } catch (e) {
     setStatus(`Bg error: ${e.message}`, "err");
   }
-});
-
-chrome.tabs.onActivated.addListener(refreshTabInfo);
-chrome.tabs.onUpdated.addListener((_id, info) => {
-  if (info.status === "complete" || info.url) refreshTabInfo();
 });
 
 init();

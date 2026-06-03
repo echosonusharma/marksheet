@@ -26,7 +26,8 @@
         font-size: 12px;
         margin: 0;
         padding: 12px;
-        min-height: 100vh;
+        height: 100vh;
+        overflow-y: auto;
       }
       h1 {
         font-size: 11px;
@@ -129,11 +130,6 @@
 
     <button id="saveBtn" class="primary">Save current page</button>
     <div id="status"></div>
-
-    <div class="panel">
-      <label>current tab</label>
-      <div id="tabInfo">—</div>
-    </div>
 
     <div class="panel">
       <label for="cfgName">config name</label>
