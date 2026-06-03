@@ -11,7 +11,7 @@ OUT="${NAME}_${VERSION}.zip"
 rm -f "$OUT"
 
 # Build find pruning conditions from .gitignore + hardcoded extras.
-PATTERNS=(.git .gitignore build.sh gen-key.sh README.md PRIVACY.md "*.zip" title.svg)
+PATTERNS=(.git .gitignore build.sh gen-key.sh README.md PRIVACY.md "*.zip" title.svg web)
 if [[ -f .gitignore ]]; then
   while IFS= read -r line || [[ -n "$line" ]]; do
     line="${line%%#*}"

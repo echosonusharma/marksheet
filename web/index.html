@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Primary SEO -->
+  <title>Marksheet — Save Browser Tabs to Google Sheets with One Click</title>
+  <meta name="description" content="Marksheet is a free Chrome extension that saves your current browser tab — URL, title, and timestamp — to a Google Sheet with a single click. Supports multiple sheet configurations, duplicate detection, and works in Chromium and Brave." />
+  <meta name="keywords" content="Chrome extension, Google Sheets, bookmark, save tabs, browser tab to spreadsheet, tab manager, URL logger, open source Chrome extension" />
+  <meta name="author" content="Marksheet" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://echosonusharma.github.io/marksheet/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://echosonusharma.github.io/marksheet/" />
+  <meta property="og:title" content="Marksheet — Save Browser Tabs to Google Sheets" />
+  <meta property="og:description" content="A free, open-source Chrome extension that saves your current tab to a Google Sheet with one click. URL, title, and timestamp. No accounts required beyond Google OAuth." />
+  <meta property="og:image" content="https://echosonusharma.github.io/marksheet/og-image.png" />
+  <meta property="og:site_name" content="Marksheet" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Marksheet — Save Browser Tabs to Google Sheets" />
+  <meta name="twitter:description" content="A free, open-source Chrome extension that saves your current tab to a Google Sheet with one click." />
+  <meta name="twitter:image" content="https://echosonusharma.github.io/marksheet/og-image.png" />
+
+  <!-- JSON-LD: SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Marksheet",
+    "description": "A Chrome browser extension that saves the current tab's URL, title, and timestamp to a Google Sheet with a single click. Supports multiple sheet configurations, automatic duplicate detection, flexible column mapping, and works in Chromium and Brave without requiring Chrome sign-in.",
+    "url": "https://echosonusharma.github.io/marksheet/",
+    "applicationCategory": "BrowserApplication",
+    "applicationSubCategory": "Productivity",
+    "operatingSystem": "Chrome, Chromium, Brave",
+    "browserRequirements": "Requires Chrome 114 or later (Manifest V3)",
+    "softwareVersion": "1.0.0",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "One-click save of current tab to Google Sheets",
+      "Saves URL, page title, and timestamp",
+      "Automatic duplicate URL detection",
+      "Multiple sheet configurations",
+      "Flexible column mapping",
+      "Local URL cache for instant duplicate checks",
+      "Works in Chromium and Brave without Chrome sign-in",
+      "Open source under MIT license"
+    ],
+    "screenshot": "https://echosonusharma.github.io/marksheet/og-image.png",
+    "softwareHelp": {
+      "@type": "CreativeWork",
+      "url": "https://github.com/echosonusharma/marksheet#readme"
+    },
+    "codeRepository": "https://github.com/echosonusharma/marksheet",
+    "license": "https://opensource.org/licenses/MIT",
+    "privacyPolicy": "https://github.com/echosonusharma/marksheet/blob/main/PRIVACY.md"
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage (boosts AI and featured snippet coverage) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What does Marksheet do?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Marksheet is a Chrome extension that saves the current browser tab — including its URL, page title, and a timestamp — to a row in a Google Sheet with a single click on the toolbar icon."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Marksheet work in Brave or Chromium?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Marksheet uses chrome.identity.launchWebAuthFlow for OAuth, which works in Chromium and Brave without requiring the user to be signed into Chrome."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does Marksheet prevent duplicate entries?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Marksheet maintains a local cache of all URLs already in your sheet. Before appending a new row it checks the cache instantly. If the URL is already saved, the icon flashes blue and the save is skipped."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use multiple Google Sheets with Marksheet?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Marksheet supports multiple named configurations, each pointing to a different spreadsheet, tab, and column mapping. You can switch the active configuration from the side panel."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Marksheet free and open source?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Marksheet is completely free and open source. The source code is available on GitHub."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #1c2230;
+      --panel:     #2a3142;
+      --panel-2:   #232938;
+      --border:    #3a4356;
+      --frame:     #8a9bb0;
+      --text:      #c8d1e0;
+      --muted:     #7d8ba0;
+      --accent:    #7eb8c4;
+      --accent-hi: #a8d4dc;
+      --ok:        #6cd49a;
+      --err:       #e07878;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ---- grid lines background ---- */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--panel-2) 1px, transparent 1px),
+        linear-gradient(90deg, var(--panel-2) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: .35;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    main { position: relative; z-index: 1; }
+
+    /* ---- utilities ---- */
+    .label {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .accent { color: var(--accent); }
+    .ok     { color: var(--ok); }
+
+    /* ---- nav ---- */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .nav-logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent-hi);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      transition: color .15s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* ---- hero ---- */
+    .hero {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 100px 48px 80px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      padding: 4px 10px;
+      margin-bottom: 36px;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hero-tag::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--ok);
+      display: block;
+      animation: blink 1.8s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    h1 {
+      font-size: clamp(36px, 6vw, 60px);
+      font-weight: 700;
+      letter-spacing: -.01em;
+      line-height: 1.05;
+      color: var(--accent-hi);
+      margin-bottom: 24px;
+    }
+
+    h1 span {
+      color: var(--text);
+      font-weight: 300;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 44px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--bg);
+      font: 600 11px/1 "JetBrains Mono", monospace;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 28px;
+      border: none;
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .btn:hover { background: var(--accent-hi); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      margin-left: 12px;
+      transition: color .15s, border-color .15s;
+    }
+
+    .btn-ghost:hover { color: var(--text); border-color: var(--frame); }
+
+    /* ---- terminal demo ---- */
+    .terminal {
+      max-width: 860px;
+      margin: 0 auto 80px;
+      padding: 0 48px;
+    }
+
+    .term-box {
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+    }
+
+    .term-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+    }
+
+    .term-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .term-dot:nth-child(1) { background: #e07878; }
+    .term-dot:nth-child(2) { background: #e0c878; }
+    .term-dot:nth-child(3) { background: #6cd49a; }
+
+    .term-title {
+      margin-left: 8px;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .10em;
+    }
+
+    .term-body {
+      padding: 20px 24px;
+      font-size: 12px;
+      line-height: 1.9;
+    }
+
+    .term-row { display: flex; gap: 12px; }
+    .term-col { color: var(--accent); min-width: 24px; }
+    .term-url { color: var(--ok); }
+    .term-title-val { color: var(--text); }
+    .term-date { color: var(--muted); }
+    .term-head { color: var(--frame); letter-spacing: .08em; font-size: 10px; text-transform: uppercase; margin-bottom: 8px; }
+
+    /* ---- divider ---- */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ---- sections ---- */
+    section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 48px;
+      letter-spacing: -.01em;
+    }
+
+    /* ---- steps ---- */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .step {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      padding: 28px 24px;
+      position: relative;
+    }
+
+    .step-num {
+      font-size: 10px;
+      letter-spacing: .12em;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .step h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+      letter-spacing: .02em;
+    }
+
+    .step p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .step-connector {
+      position: absolute;
+      right: -13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: var(--border);
+      z-index: 2;
+    }
+
+    /* ---- features ---- */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+    }
+
+    .feature {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      padding: 22px 24px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .feature-icon {
+      font-size: 14px;
+      color: var(--accent);
+      min-width: 20px;
+      margin-top: 1px;
+    }
+
+    .feature-body h4 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 5px;
+      letter-spacing: .03em;
+    }
+
+    .feature-body p {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ---- footer ---- */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    footer p {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .15s;
+    }
+
+    footer a:hover { color: var(--accent); }
+
+    /* ---- responsive ---- */
+    @media (max-width: 640px) {
+      nav, section, .hero, .terminal { padding-left: 20px; padding-right: 20px; }
+      footer { padding-left: 20px; padding-right: 20px; flex-direction: column; gap: 12px; }
+      .steps, .features { grid-template-columns: 1fr; }
+      .step-connector { display: none; }
+      h1 { font-size: 32px; }
+    }
+
+    /* ---- entrance animations ---- */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp .5s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: none; }
+    }
+
+    .delay-1 { animation-delay: .1s; }
+    .delay-2 { animation-delay: .2s; }
+    .delay-3 { animation-delay: .3s; }
+    .delay-4 { animation-delay: .4s; }
+  </style>
+</head>
+<body>
+<main>
+
+  <nav>
+    <a class="nav-logo" href="#">marksheet</a>
+    <ul class="nav-links">
+      <li><a href="#how">how it works</a></li>
+      <li><a href="#features">features</a></li>
+      <li><a href="https://github.com/echosonusharma/marksheet" target="_blank" rel="noopener">github</a></li>
+    </ul>
+  </nav>
+
+  <!-- hero -->
+  <div class="hero">
+    <div class="hero-tag fade-up">Chrome Extension · Manifest V3</div>
+    <h1 class="fade-up delay-1">Save tabs to<br><span>Google Sheets.</span></h1>
+    <p class="hero-sub fade-up delay-2">
+      One click. Current URL, title, and timestamp land in your spreadsheet — no copy-paste, no context switch.
+    </p>
+    <div class="fade-up delay-3">
+      <a class="btn" href="https://chromewebstore.google.com/detail/marksheet/lalliloaddnobnfelobeaejemgfkcbfd" target="_blank" rel="noopener">Install Extension</a>
+      <a class="btn btn-ghost" href="https://github.com/echosonusharma/marksheet" target="_blank" rel="noopener">View Source</a>
+    </div>
+  </div>
+
+  <!-- terminal preview -->
+  <div class="terminal fade-up delay-4">
+    <div class="term-box">
+      <div class="term-bar">
+        <div class="term-dot"></div>
+        <div class="term-dot"></div>
+        <div class="term-dot"></div>
+        <span class="term-title">bookmarks · Sheet1</span>
+      </div>
+      <div class="term-body">
+        <div class="term-head">
+          <span style="display:inline-block;width:32px">A</span>
+          <span style="display:inline-block;width:280px">B</span>
+          <span>C</span>
+        </div>
+        <div class="term-row">
+          <span class="term-col">1</span>
+          <span class="term-url" style="width:280px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">https://github.com/trending</span>
+          <span class="term-title-val" style="width:200px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Trending repositories · GitHub</span>
+          <span class="term-date" style="margin-left:12px">Jun 3, 2026, 9:14 AM</span>
+        </div>
+        <div class="term-row">
+          <span class="term-col">2</span>
+          <span class="term-url" style="width:280px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">https://news.ycombinator.com</span>
+          <span class="term-title-val" style="width:200px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Hacker News</span>
+          <span class="term-date" style="margin-left:12px">Jun 3, 2026, 11:02 AM</span>
+        </div>
+        <div class="term-row" style="opacity:.4">
+          <span class="term-col">3</span>
+          <span class="term-url" style="width:280px;display:inline-block">█████████████████████</span>
+          <span class="term-title-val" style="display:inline-block">████████████</span>
+          <span class="term-date" style="margin-left:12px">█████████████████████</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- how it works -->
+  <section id="how">
+    <p class="section-label">// how it works</p>
+    <h2>Three steps. Then just click.</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01 ——</span>
+        <h3>Install the extension</h3>
+        <p>Load it from the Chrome Web Store or manually via developer mode.</p>
+        <span class="step-connector">›</span>
+      </div>
+      <div class="step">
+        <span class="step-num">02 ——</span>
+        <h3>Connect your sheet</h3>
+        <p>Paste a Google Sheets URL, pick the tab, map columns to URL / title / date.</p>
+        <span class="step-connector">›</span>
+      </div>
+      <div class="step">
+        <span class="step-num">03 ——</span>
+        <h3>Click to save</h3>
+        <p>Hit the extension icon. Current tab appended instantly. Duplicates skipped automatically.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- features -->
+  <section id="features">
+    <p class="section-label">// features</p>
+    <h2>Built for daily use.</h2>
+    <div class="features">
+      <div class="feature">
+        <span class="feature-icon">▸</span>
+        <div class="feature-body">
+          <h4>One-click save</h4>
+          <p>Click the toolbar icon. URL, title, and timestamp go straight into the sheet row.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">▸</span>
+        <div class="feature-body">
+          <h4>Duplicate detection</h4>
+          <p>Already saved this URL? Icon flashes blue and skips the append — no clutter.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">▸</span>
+        <div class="feature-body">
+          <h4>Multiple configs</h4>
+          <p>Separate sheets for work, reading, research. Switch active config from the panel.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">▸</span>
+        <div class="feature-body">
+          <h4>Flexible column mapping</h4>
+          <p>Map URL, title, and date to any column. Skip fields you don't need.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">▸</span>
+        <div class="feature-body">
+          <h4>Works in any Chromium browser</h4>
+          <p>Chrome, Brave, Edge — no browser account required. Just your Google account.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">▸</span>
+        <div class="feature-body">
+          <h4>Fast. No loading spinners.</h4>
+          <p>Duplicate checks happen instantly. Nothing waits on a network call before saving.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>marksheet — <a href="https://github.com/echosonusharma/marksheet" target="_blank" rel="noopener">open source</a> · <a href="https://github.com/echosonusharma/marksheet/blob/main/PRIVACY.md" target="_blank" rel="noopener">privacy</a></p>
+  <p style="color:var(--border)">no tracking · no analytics · no nonsense</p>
+</footer>
+
+<!-- Machine-readable summary for AI crawlers -->
+<div hidden aria-hidden="true" itemscope itemtype="https://schema.org/SoftwareApplication">
+  <meta itemprop="name" content="Marksheet" />
+  <meta itemprop="description" content="Marksheet is a free, open-source Chrome extension (Manifest V3) that saves the active browser tab — URL, page title, and current timestamp — as a new row in a user-specified Google Sheet. It supports multiple named sheet configurations, flexible column mapping, automatic duplicate detection via a local URL cache, and OAuth authentication that works in Chrome, Chromium, and Brave without requiring Chrome browser sign-in. Installation requires Chrome 114 or later." />
+  <meta itemprop="applicationCategory" content="BrowserApplication" />
+  <meta itemprop="operatingSystem" content="Chrome 114+, Chromium, Brave" />
+  <meta itemprop="price" content="0" />
+  <meta itemprop="priceCurrency" content="USD" />
+  <link itemprop="codeRepository" href="https://github.com/echosonusharma/marksheet" />
+</div>
+
+</body>
+</html>

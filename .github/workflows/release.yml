@@ -1,0 +1,27 @@
+name: Release Extension
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build extension zip
+        run: bash build.sh
+
+      - name: Get zip name
+        id: zip
+        run: echo "file=$(ls *.zip)" >> "$GITHUB_OUTPUT"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.zip.outputs.file }}
+          generate_release_notes: true
