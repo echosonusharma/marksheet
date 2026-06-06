@@ -17,9 +17,10 @@ const DATE_FMT = new Intl.DateTimeFormat("en-US", {
 });
 
 const FIELDS = {
-  url: (t) => t.url || "",
+  url:   (t) => t.url   || "",
   title: (t) => t.title || "",
-  date: () => DATE_FMT.format(new Date()),
+  date:  ()  => DATE_FMT.format(new Date()),
+  notes: (t) => t.notes || "",
 };
 
 // ---- Helpers ----
@@ -77,6 +78,19 @@ async function appendRow(sheetId, tabName, row) {
   const range = encodeURIComponent(a1Range(tabName, "A1"));
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}:append?valueInputOption=RAW`;
   return apiFetch(url, { method: "POST", body: JSON.stringify({ values: [row] }) });
+}
+
+async function readCell(sheetId, tabName, col, row) {
+  const range = encodeURIComponent(a1Range(tabName, `${col}${row}`));
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`;
+  const data = await apiFetch(url);
+  return data?.values?.[0]?.[0] || "";
+}
+
+async function updateCell(sheetId, tabName, col, row, value) {
+  const range = encodeURIComponent(a1Range(tabName, `${col}${row}`));
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?valueInputOption=RAW`;
+  return apiFetch(url, { method: "PUT", body: JSON.stringify({ values: [[value]] }) });
 }
 
 // ---- URL cache ----
@@ -205,11 +219,11 @@ function updateSetupBadge() {
 
 // Single-flight lock so rapid double-clicks can't append duplicate rows.
 let saveInFlight = null;
-async function savePage(tab) {
+async function savePage(tab, extra = {}) {
   if (saveInFlight) return saveInFlight;
   saveInFlight = (async () => {
     try {
-      return await savePageInner(tab);
+      return await savePageInner(tab, extra);
     } finally {
       saveInFlight = null;
     }
@@ -217,11 +231,10 @@ async function savePage(tab) {
   return saveInFlight;
 }
 
-async function savePageInner(tab) {
+async function savePageInner(tab, extra = {}) {
   try {
     const cfg = await getActiveConfig();
     if (!cfg?.sheetId || !cfg?.tabName) {
-      // Gesture already lost here — caller must have opened panel synchronously.
       await flashIcon("err");
       return { status: "no_config" };
     }
@@ -233,11 +246,35 @@ async function savePageInner(tab) {
     }
 
     const { sheetId, tabName, mapping = {} } = cfg;
-    const tabData = { url: pageUrl, title: tab?.title };
+    const tabData = { url: pageUrl, title: tab?.title, ...extra };
 
-    if (mapping.url) {
+    // ---- Notes save: update existing row or insert new ----
+    if (extra.notes && mapping.notes) {
+      const cache = mapping.url ? await getUrlCacheForCurrent(sheetId, tabName, mapping.url) : null;
+      const rowIdx = cache ? cache.urls.indexOf(pageUrl) : -1;
+
+      if (rowIdx >= 0) {
+        // URL exists — append note to existing notes cell
+        const sheetRow = rowIdx + 1;
+        const notesCol = colNumToLetter(mapping.notes);
+        const existing = await readCell(sheetId, tabName, notesCol, sheetRow);
+        const updated = existing ? `${existing}\n• ${extra.notes}` : `• ${extra.notes}`;
+        await updateCell(sheetId, tabName, notesCol, sheetRow, updated);
+        await flashIcon("ok");
+        return { status: "ok" };
+      }
+      // URL not in sheet — fall through to insert new row with note as bullet
+      tabData.notes = `• ${extra.notes}`;
+    }
+
+    // ---- Normal save: duplicate check then append ----
+    if (!extra.notes && mapping.url) {
       const cache = await getUrlCacheForCurrent(sheetId, tabName, mapping.url);
-      if (cache?.urls.includes(pageUrl)) {
+      if (!cache) {
+        await flashIcon("err");
+        return { status: "cache_unavailable" };
+      }
+      if (cache.urls.includes(pageUrl)) {
         await flashIcon("dup");
         return { status: "duplicate" };
       }
@@ -286,6 +323,19 @@ function scheduleAlarm() {
 chrome.runtime.onInstalled.addListener(() => {
   scheduleAlarm();
   refreshUrlCache().catch((e) => console.error("Marksheet onInstalled:", e));
+  chrome.contextMenus.create({
+    id: "save-with-note",
+    title: 'Save to Marksheet with note: "%s"',
+    contexts: ["selection"],
+  });
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId !== "save-with-note") return;
+  getActiveConfig().then((cfg) => {
+    if (!cfg?.mapping?.notes) { flashIcon("err"); return; }
+    savePage(tab, { notes: info.selectionText });
+  });
 });
 chrome.runtime.onStartup.addListener(() => {
   scheduleAlarm();

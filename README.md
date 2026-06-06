@@ -13,6 +13,7 @@ A tiny browser extension that saves the page you're on into a Google Sheet - one
 - Click toolbar icon → appends the current page's URL, title, and timestamp to a row in your sheet.
 - Pick which column each field goes into. Skip any you don't want.
 - Keep multiple sheet configurations (e.g. *work*, *reading*, *bookmarks*) and switch active from the side panel.
+- Select text on any page → right-click → "Save to Marksheet with note" to append a note alongside the URL. If the URL is already in the sheet, the note is appended to the existing row.
 - Detects duplicates against a local cache of the URL column — no double rows.
 - Status feedback via icon tint: green (saved), blue (already saved), red (error).
 

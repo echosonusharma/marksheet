@@ -33,7 +33,12 @@ function launchAuth(interactive) {
   });
   const url = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
   return new Promise((resolve, reject) => {
-    chrome.identity.launchWebAuthFlow({ url, interactive }, (redir) => {
+    chrome.identity.launchWebAuthFlow({
+      url,
+      interactive,
+      abortOnLoadForNonInteractive: !interactive,
+      timeoutMsForNonInteractive: 3000,
+    }, (redir) => {
       if (chrome.runtime.lastError || !redir) {
         reject(new Error(chrome.runtime.lastError?.message || "auth failed"));
         return;
@@ -74,7 +79,7 @@ export async function getToken(interactive = true) {
   } catch (e) {
     // Only go interactive for errors that genuinely require user action.
     // Never prompt from a background context (alarm, onStartup, etc.).
-    const recoverable = /interaction_required|consent_required|login_required/.test(e.message);
+    const recoverable = /interaction_required|consent_required|login_required|User interaction required/.test(e.message);
     if (!interactive || !recoverable) throw e;
     const t = await launchAuth(true);
     await saveToken(t);

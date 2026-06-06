@@ -18,6 +18,7 @@ const $addType = $("addType");
 const $mapUrl = $("mapUrl");
 const $mapTitle = $("mapTitle");
 const $mapDate = $("mapDate");
+const $mapNotes = $("mapNotes");
 const $save = $("save");
 const $refresh = $("refresh");
 const $cacheInfo = $("cacheInfo");
@@ -83,6 +84,7 @@ function refreshColSelectors(preserve) {
   populateColSelector($mapUrl, preserve?.url);
   populateColSelector($mapTitle, preserve?.title);
   populateColSelector($mapDate, preserve?.date);
+  populateColSelector($mapNotes, preserve?.notes);
 }
 
 function renderConfigList() {
@@ -266,9 +268,10 @@ $save.addEventListener("click", async () => {
     tabName: $tab.value,
     additionType: $addType.value,
     mapping: {
-      url: parseInt($mapUrl.value, 10) || null,
+      url:   parseInt($mapUrl.value,   10) || null,
       title: parseInt($mapTitle.value, 10) || null,
-      date: parseInt($mapDate.value, 10) || null,
+      date:  parseInt($mapDate.value,  10) || null,
+      notes: parseInt($mapNotes.value, 10) || null,
     },
   };
   await persist();
@@ -288,6 +291,7 @@ $saveBtn.addEventListener("click", async () => {
   const map = {
     ok: ["Saved ✓", "ok"],
     duplicate: ["Already saved", "dup"],
+    cache_unavailable: ["Cache unavailable — try Refresh", "err"],
     invalid_page: ["Can't save this page", "err"],
     no_config: ["No active config", "err"],
     no_mapping: ["Mapping missing", "err"],
