@@ -4,6 +4,22 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+# Pass --strip-key to remove the "key" field from manifest before packaging (required for CWS upload).
+STRIP_KEY=0
+for arg in "$@"; do [[ "$arg" == "--strip-key" ]] && STRIP_KEY=1; done
+
+if [[ $STRIP_KEY -eq 1 ]]; then
+  cp manifest.json manifest.json.bak
+  trap 'mv manifest.json.bak manifest.json' EXIT
+  # Remove the "key" line (and its trailing comma if any) using python for reliable JSON handling.
+  python3 -c "
+import json, sys
+m = json.load(open('manifest.json'))
+m.pop('key', None)
+json.dump(m, open('manifest.json', 'w'), indent=2)
+"
+fi
+
 NAME=$(grep -oE '"name"\s*:\s*"[^"]+"' manifest.json | sed -E 's/.*"([^"]+)"$/\1/')
 VERSION=$(grep -oE '"version"\s*:\s*"[^"]+"' manifest.json | sed -E 's/.*"([^"]+)"$/\1/')
 OUT="${NAME}_${VERSION}.zip"
