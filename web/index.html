@@ -356,10 +356,21 @@
 
     /* ---- responsive ---- */
     @media (max-width: 640px) {
-      section, .hero, .terminal { padding-left: 20px; padding-right: 20px; }
+      .hero { padding: 60px 20px 48px; }
+      section, .terminal { padding-left: 20px; padding-right: 20px; }
+      section { padding-top: 56px; padding-bottom: 56px; }
       .steps, .features { grid-template-columns: 1fr; }
       .step-connector { display: none; }
-      h1 { font-size: 32px; }
+      h1 { font-size: 30px; }
+      h2 { font-size: 18px; margin-bottom: 28px; }
+      /* terminal: scroll horizontally rather than overflow */
+      .term-box { overflow-x: auto; }
+      .term-body { min-width: 480px; }
+      /* hide date on very narrow screens */
+      .term-date { display: none; }
+      /* buttons stack */
+      .hero .btn, .hero .btn-ghost { display: block; margin: 0 0 10px; text-align: center; }
+      .hero .btn-ghost { margin-left: 0; }
     }
 
     /* ---- entrance animations ---- */

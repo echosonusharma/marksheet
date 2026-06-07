@@ -126,6 +126,7 @@ a { color: var(--accent); text-decoration: none; }
 a:hover { color: var(--accent-hi); }
 
 @media (max-width: 640px) {
-  nav, footer { padding-left: 20px; padding-right: 20px; }
-  footer { flex-direction: column; gap: 12px; }
+  nav { padding: 14px 20px; }
+  .nav-links { gap: 16px; }
+  footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
 }
