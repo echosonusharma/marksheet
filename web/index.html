@@ -324,6 +324,10 @@
       gap: 2px;
     }
 
+    .features .feature:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+
     .feature {
       border: 1px solid var(--border);
       background: var(--panel);
@@ -407,7 +411,7 @@
     <div class="hero-tag fade-up">Chrome Extension · Manifest V3</div>
     <h1 class="fade-up delay-1">Save tabs to<br><span>Google Sheets.</span></h1>
     <p class="hero-sub fade-up delay-2">
-      One click. Current URL, title, and timestamp land in your spreadsheet — no copy-paste, no context switch.
+      One click. Current URL, title, and timestamp land in your spreadsheet — no copy-paste, no context switch. Select text to save a note alongside it.
     </p>
     <div class="fade-up delay-3">
       <a class="btn" href="https://chromewebstore.google.com/detail/marksheet/lalliloaddnobnfelobeaejemgfkcbfd" target="_blank" rel="noopener">Install Extension</a>
@@ -427,26 +431,31 @@
       <div class="term-body">
         <div class="term-head">
           <span style="display:inline-block;width:32px">A</span>
-          <span style="display:inline-block;width:280px">B</span>
-          <span>C</span>
+          <span style="display:inline-block;width:260px">B</span>
+          <span style="display:inline-block;width:190px">C</span>
+          <span style="display:inline-block;width:160px">D</span>
+          <span>E</span>
         </div>
         <div class="term-row">
           <span class="term-col">1</span>
-          <span class="term-url" style="width:280px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">https://github.com/trending</span>
-          <span class="term-title-val" style="width:200px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Trending repositories · GitHub</span>
-          <span class="term-date" style="margin-left:12px">Jun 3, 2026, 9:14 AM</span>
+          <span class="term-url" style="width:260px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">https://github.com/trending</span>
+          <span class="term-title-val" style="width:190px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Trending repositories · GitHub</span>
+          <span class="term-date" style="width:160px;display:inline-block">Jun 3, 2026, 9:14 AM</span>
+          <span class="term-title-val" style="display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:160px;opacity:.7">good list for inspiration</span>
         </div>
         <div class="term-row">
           <span class="term-col">2</span>
-          <span class="term-url" style="width:280px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">https://news.ycombinator.com</span>
-          <span class="term-title-val" style="width:200px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Hacker News</span>
-          <span class="term-date" style="margin-left:12px">Jun 3, 2026, 11:02 AM</span>
+          <span class="term-url" style="width:260px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">https://news.ycombinator.com</span>
+          <span class="term-title-val" style="width:190px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Hacker News</span>
+          <span class="term-date" style="width:160px;display:inline-block">Jun 3, 2026, 11:02 AM</span>
+          <span style="display:inline-block;width:160px"></span>
         </div>
         <div class="term-row" style="opacity:.4">
           <span class="term-col">3</span>
-          <span class="term-url" style="width:280px;display:inline-block">█████████████████████</span>
-          <span class="term-title-val" style="display:inline-block">████████████</span>
-          <span class="term-date" style="margin-left:12px">█████████████████████</span>
+          <span class="term-url" style="width:260px;display:inline-block">█████████████████████</span>
+          <span class="term-title-val" style="width:190px;display:inline-block">████████████</span>
+          <span class="term-date" style="width:160px;display:inline-block">█████████████</span>
+          <span style="display:inline-block">██████████████</span>
         </div>
       </div>
     </div>
@@ -474,7 +483,7 @@
       <div class="step">
         <span class="step-num">03 ——</span>
         <h3>Click to save</h3>
-        <p>Hit the extension icon. Current tab appended instantly. Duplicates skipped automatically.</p>
+        <p>Hit the extension icon. Current tab appended instantly. Duplicates skipped automatically. Or select text, right-click, and save a note alongside the URL.</p>
       </div>
     </div>
   </section>

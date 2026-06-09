@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e1e1e" stroke-width="1"/>
+    </pattern>
+    <clipPath id="left-col">
+      <rect x="0" y="0" width="688" height="630"/>
+    </clipPath>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="630" fill="#0d0d0d"/>
+  <!-- grid -->
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.5"/>
+
+  <!-- left accent bar -->
+  <rect x="0" y="0" width="4" height="630" fill="#4ade80"/>
+
+  <!-- icon (embedded base64) -->
+  <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAABqUlEQVR42u3ZuxHCMBBAQRVCRAXUQzEUQCUugQJcAiExbUDmzGOB/JFO+2Yu11kbySlJkiRJkiRJkiRJpQ3P12dpbo8xzFzvQ9EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAMAKfz5d3KAAAAAAAAAAAAAAAAAAAAAOAdAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPA7GAAAAAAAAAAAAAAAAAAAAADvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwDh9ZAA6AzB3RgCCA8g9KwABAfx6XgCCACg9NwCNAlj7/AA0BGCrHQCoHMBeuwBQGYCjdgKgAgBH7wXAQQBq2w+AnQDUvicAGwJoZVcAVgbQ6s4AFAKIsjsAfwCItj8AmQBS8ACYmdRZAHR8+TkIugCQNAshNABXvgwhLADXnIfAl5AkSZIkSZIkrdQXXgjz9efK/bIAAAAASUVORK5CYII=" x="72" y="72" width="72" height="72"/>
+
+  <!-- wordmark -->
+  <text x="160" y="128" font-family="'Courier New', Courier, monospace" font-size="52" font-weight="700" fill="#f0f0f0" letter-spacing="-1">marksheet</text>
+
+  <!-- tag pill -->
+  <rect x="72" y="168" width="228" height="28" rx="2" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>
+  <circle cx="90" cy="182" r="5" fill="#4ade80"/>
+  <text x="104" y="187" font-family="'Courier New', Courier, monospace" font-size="11" fill="#888" letter-spacing="2">CHROME EXTENSION · MV3</text>
+
+  <!-- left column content clipped at divider -->
+  <g clip-path="url(#left-col)">
+    <!-- headline -->
+    <text x="72" y="272" font-family="'Courier New', Courier, monospace" font-size="48" font-weight="700" fill="#f0f0f0">Save tabs to</text>
+    <text x="72" y="332" font-family="'Courier New', Courier, monospace" font-size="48" font-weight="300" fill="#888">Google Sheets.</text>
+
+    <!-- sub — two short lines, both safe within 616px -->
+    <text x="72" y="388" font-family="'Courier New', Courier, monospace" font-size="17" fill="#666">One click. URL, title, timestamp → sheet.</text>
+    <text x="72" y="414" font-family="'Courier New', Courier, monospace" font-size="17" fill="#666">Select text to save a note alongside it.</text>
+
+    <!-- terminal card -->
+    <rect x="72" y="454" width="580" height="128" rx="2" fill="#141414" stroke="#222" stroke-width="1"/>
+    <!-- term bar -->
+    <rect x="72" y="454" width="580" height="28" rx="2" fill="#1a1a1a" stroke="#222" stroke-width="1"/>
+    <circle cx="94" cy="468" r="5" fill="#e07878"/>
+    <circle cx="112" cy="468" r="5" fill="#e0c878"/>
+    <circle cx="130" cy="468" r="5" fill="#6cd49a"/>
+    <text x="152" y="473" font-family="'Courier New', Courier, monospace" font-size="10" fill="#555" letter-spacing="1">bookmarks · Sheet1</text>
+    <!-- term rows -->
+    <text x="92" y="506" font-family="'Courier New', Courier, monospace" font-size="12" fill="#4ade80">https://github.com/trending</text>
+    <text x="360" y="506" font-family="'Courier New', Courier, monospace" font-size="12" fill="#aaa">Trending · GitHub</text>
+    <text x="92" y="530" font-family="'Courier New', Courier, monospace" font-size="12" fill="#4ade80">https://news.ycombinator.com</text>
+    <text x="360" y="530" font-family="'Courier New', Courier, monospace" font-size="12" fill="#aaa">Hacker News</text>
+    <text x="92" y="556" font-family="'Courier New', Courier, monospace" font-size="12" fill="#333">████████████████████████</text>
+    <text x="360" y="556" font-family="'Courier New', Courier, monospace" font-size="12" fill="#333">████████████</text>
+  </g>
+
+  <!-- divider -->
+  <line x1="700" y1="140" x2="700" y2="590" stroke="#252525" stroke-width="1"/>
+
+  <!-- right side features -->
+  <text x="728" y="200" font-family="'Courier New', Courier, monospace" font-size="13" fill="#4ade80">▸</text>
+  <text x="750" y="200" font-family="'Courier New', Courier, monospace" font-size="13" fill="#ccc">One-click save</text>
+
+  <text x="728" y="240" font-family="'Courier New', Courier, monospace" font-size="13" fill="#4ade80">▸</text>
+  <text x="750" y="240" font-family="'Courier New', Courier, monospace" font-size="13" fill="#ccc">Duplicate detection</text>
+
+  <text x="728" y="280" font-family="'Courier New', Courier, monospace" font-size="13" fill="#4ade80">▸</text>
+  <text x="750" y="280" font-family="'Courier New', Courier, monospace" font-size="13" fill="#ccc">Multiple sheet configs</text>
+
+  <text x="728" y="320" font-family="'Courier New', Courier, monospace" font-size="13" fill="#4ade80">▸</text>
+  <text x="750" y="320" font-family="'Courier New', Courier, monospace" font-size="13" fill="#ccc">Save with note (right-click)</text>
+
+  <text x="728" y="360" font-family="'Courier New', Courier, monospace" font-size="13" fill="#4ade80">▸</text>
+  <text x="750" y="360" font-family="'Courier New', Courier, monospace" font-size="13" fill="#ccc">Chrome, Brave, Edge</text>
+
+  <text x="728" y="400" font-family="'Courier New', Courier, monospace" font-size="13" fill="#4ade80">▸</text>
+  <text x="750" y="400" font-family="'Courier New', Courier, monospace" font-size="13" fill="#ccc">Free &amp; open source</text>
+
+  <!-- url -->
+  <text x="728" y="590" font-family="'Courier New', Courier, monospace" font-size="12" fill="#444">marksheet.echosonusharma.in</text>
+</svg>
