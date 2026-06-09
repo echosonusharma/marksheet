@@ -242,11 +242,12 @@
       line-height: 1.9;
     }
 
-    .term-row { display: flex; gap: 12px; }
-    .term-col { color: var(--accent); min-width: 24px; }
-    .term-url { color: var(--ok); }
-    .term-title-val { color: var(--text); }
-    .term-date { color: var(--muted); }
+    .term-row, .term-head { display: flex; align-items: baseline; }
+    .term-col  { color: var(--accent); width: 40px; flex-shrink: 0; }
+    .term-url  { color: var(--ok); width: 280px; flex-shrink: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .term-title-val { color: var(--text); width: 220px; flex-shrink: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .term-date { color: var(--muted); width: 195px; flex-shrink: 0; white-space: nowrap; }
+    .term-note { color: var(--text); flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; opacity: .7; }
     .term-head { color: var(--frame); letter-spacing: .08em; font-size: 10px; text-transform: uppercase; margin-bottom: 8px; }
 
     /* ---- divider ---- */
@@ -258,7 +259,7 @@
 
     /* ---- sections ---- */
     section {
-      max-width: 860px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 80px 48px;
     }
@@ -320,12 +321,8 @@
     /* ---- features ---- */
     .features {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr;
       gap: 2px;
-    }
-
-    .features .feature:last-child:nth-child(odd) {
-      grid-column: 1 / -1;
     }
 
     .feature {
@@ -369,7 +366,7 @@
       h2 { font-size: 18px; margin-bottom: 28px; }
       /* terminal: scroll horizontally rather than overflow */
       .term-box { overflow-x: auto; }
-      .term-body { min-width: 480px; }
+      .term-body { min-width: 600px; }
       /* hide date on very narrow screens */
       .term-date { display: none; }
       /* buttons stack */
@@ -430,32 +427,32 @@
       </div>
       <div class="term-body">
         <div class="term-head">
-          <span style="display:inline-block;width:36px">A</span>
-          <span style="display:inline-block;width:300px">B</span>
-          <span style="display:inline-block;width:240px">C</span>
-          <span style="display:inline-block;width:200px">D</span>
-          <span>E</span>
+          <span class="term-col">#</span>
+          <span class="term-url">URL</span>
+          <span class="term-title-val">Title</span>
+          <span class="term-date">Saved</span>
+          <span class="term-note">Note</span>
         </div>
         <div class="term-row">
           <span class="term-col">1</span>
-          <span class="term-url" style="width:300px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">https://github.com/trending</span>
-          <span class="term-title-val" style="width:240px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Trending repositories · GitHub</span>
-          <span class="term-date" style="width:200px;display:inline-block;white-space:nowrap">Jun 3, 2026, 9:14 AM</span>
-          <span class="term-title-val" style="display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:220px;opacity:.7">good list for inspiration</span>
+          <span class="term-url">https://github.com/trending</span>
+          <span class="term-title-val">Trending repositories · GitHub</span>
+          <span class="term-date">Jun 3, 2026, 9:14 AM</span>
+          <span class="term-note">good list for inspiration</span>
         </div>
         <div class="term-row">
           <span class="term-col">2</span>
-          <span class="term-url" style="width:300px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">https://news.ycombinator.com</span>
-          <span class="term-title-val" style="width:240px;display:inline-block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Hacker News</span>
-          <span class="term-date" style="width:200px;display:inline-block;white-space:nowrap">Jun 3, 2026, 11:02 AM</span>
-          <span style="display:inline-block;width:220px"></span>
+          <span class="term-url">https://news.ycombinator.com</span>
+          <span class="term-title-val">Hacker News</span>
+          <span class="term-date">Jun 3, 2026, 11:02 AM</span>
+          <span class="term-note"></span>
         </div>
         <div class="term-row" style="opacity:.4">
           <span class="term-col">3</span>
-          <span class="term-url" style="width:300px;display:inline-block">█████████████████████</span>
-          <span class="term-title-val" style="width:240px;display:inline-block">████████████</span>
-          <span class="term-date" style="width:200px;display:inline-block;white-space:nowrap">█████████████</span>
-          <span style="display:inline-block">██████████████</span>
+          <span class="term-url">█████████████████████</span>
+          <span class="term-title-val">████████████</span>
+          <span class="term-date">█████████████</span>
+          <span class="term-note">██████████████</span>
         </div>
       </div>
     </div>
