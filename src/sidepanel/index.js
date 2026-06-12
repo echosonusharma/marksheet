@@ -67,16 +67,16 @@ async function loadSheetMeta(id) {
 
 function populateColSelector(sel, selectedCol) {
   sel.innerHTML = "";
-  const none = document.createElement("option");
-  none.value = "";
-  none.textContent = "(none)";
-  sel.appendChild(none);
-  for (let i = 1; i <= COL_COUNT; i++) {
+  for (let i = COL_COUNT; i >= 1; i-=1) {
     const o = document.createElement("option");
     o.value = String(i);
     o.textContent = `${colLetter(i)} (Column ${i})`;
     sel.appendChild(o);
   }
+  const none = document.createElement("option");
+  none.value = "";
+  none.textContent = "(none)";
+  sel.appendChild(none);
   sel.value = selectedCol ? String(selectedCol) : "";
 }
 

@@ -116,6 +116,11 @@
       .err { color: var(--err); }
       .dup { color: var(--dup); }
       #tabInfo { font-size: 10px; color: var(--muted); word-break: break-all; }
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: var(--bg); }
+      ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 0; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--frame); }
+      * { scrollbar-width: thin; scrollbar-color: var(--border) var(--bg); }
     </style>
   </head>
   <body>
