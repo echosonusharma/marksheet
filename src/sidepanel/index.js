@@ -105,8 +105,8 @@ async function loadConfigIntoForm(id) {
   if (!c) {
     $cfgName.value = "";
     $sheetInput.value = "";
-    $sheetInfo.textContent = "—";
-    $tab.innerHTML = "<option>—</option>";
+    $sheetInfo.textContent = "-";
+    $tab.innerHTML = "<option>-</option>";
     refreshColSelectors();
     sheetId = null;
     sheetName = null;
@@ -117,7 +117,7 @@ async function loadConfigIntoForm(id) {
   $addType.value = c.additionType || "append";
   sheetId = c.sheetId || null;
   sheetName = c.sheetName || null;
-  $sheetInfo.textContent = sheetName || "—";
+  $sheetInfo.textContent = sheetName || "-";
 
   $tab.innerHTML = "";
   if (sheetId) {
@@ -150,7 +150,7 @@ async function onSheetChange() {
     sheetId = null;
     sheetName = null;
     $sheetInfo.textContent = "invalid url or id";
-    $tab.innerHTML = "<option>—</option>";
+    $tab.innerHTML = "<option>-</option>";
     return;
   }
   setStatus("Loading…");
@@ -191,7 +191,7 @@ async function updateCacheInfo() {
     const ago = Math.round((Date.now() - c.fetchedAt) / 1000);
     $cacheInfo.textContent = `${c.urls.length} urls · refreshed ${ago}s ago`;
   } catch {
-    $cacheInfo.textContent = "—";
+    $cacheInfo.textContent = "-";
   }
 }
 
@@ -291,7 +291,7 @@ $saveBtn.addEventListener("click", async () => {
   const map = {
     ok: ["Saved ✓", "ok"],
     duplicate: ["Already saved", "dup"],
-    cache_unavailable: ["Cache unavailable — try Refresh", "err"],
+    cache_unavailable: ["Cache unavailable - try Refresh", "err"],
     invalid_page: ["Can't save this page", "err"],
     no_config: ["No active config", "err"],
     no_mapping: ["Mapping missing", "err"],

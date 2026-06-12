@@ -6,8 +6,8 @@ const ACTIVE_KEY = "activeId";
 const URL_CACHE_KEY = "urlCache";
 const LEGACY_SETTINGS_KEY = "settings";
 const REFRESH_ALARM = "urlCacheRefresh";
-const REFRESH_MINUTES = 60;
-const ICON_FLASH_MS = 4000;
+const REFRESH_MINUTES = 30;
+const ICON_FLASH_MS = 3000;
 
 // ---- Field producers ----
 const DATE_FMT = new Intl.DateTimeFormat("en-US", {
