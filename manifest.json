@@ -26,5 +26,8 @@
     "48": "assets/icon_48.png",
     "128": "assets/icon_128.png"
   },
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https://sheets.googleapis.com https://oauth2.googleapis.com; object-src 'none'"
+  },
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2SjEfBIu8mnrOdKwS2koTRV63t0sLjOVIM0nI/FguXWO/aoIzd8wwm3pKHtQbyA5BI1IMqo0ad/6UtjPqwcGpJLCXhmuOnLUtGlHe8zBBLi+xG9Gq0wQ6WvcDLNXwMZJnKjVearQTpmylehgXiF9Cpu5vE/bDY/s619+PnSZdvHnVU32VPRy6z0957odvNwGrntsPdNH8QFULzZLVGaEbU+EA0XjUqYEroyCjtjAAeXfQ66P7iglEn5fXnwGCla8UQru3xAQCPWV9hE5K5N6lQ5rodz3J/Bum9U9QFBtmq5aeJzBHLs3fWRJFWj/8WefCFGvN0KNuackCYaOgdMDXQIDAQAB"
 }
