@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "marksheet",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "bookmark to google-sheet",
   "permissions": ["identity", "tabs", "storage", "alarms", "sidePanel", "contextMenus"],
   "side_panel": { "default_path": "src/sidepanel/index.html" },
