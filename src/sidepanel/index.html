@@ -145,12 +145,13 @@
       <div class="hint" id="sheetInfo">-</div>
 
       <label for="tab">tab</label>
-      <select id="tab"><option>-</option></select>
+      <div style="display:flex;gap:6px;">
+        <input id="tab" list="tabOptions" autocomplete="off" placeholder="select or type tab name…" style="flex:1;width:auto;" />
+        <datalist id="tabOptions"></datalist>
+        <button id="refreshTab" class="ghost" style="width:auto;padding:6px 10px;line-height:0;" title="Refresh tab list"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+      </div>
 
-      <label for="addType">addition type</label>
-      <select id="addType">
-        <option value="append">append</option>
-      </select>
+
     </div>
 
     <div class="panel">
@@ -158,7 +159,7 @@
       <div class="hint">(none) = skip</div>
       <div class="row"><label for="mapUrl">url</label><select id="mapUrl"></select></div>
       <div class="row"><label for="mapTitle">title</label><select id="mapTitle"></select></div>
-      <div class="row"><label for="mapDate">date</label><select id="mapDate"></select></div>
+      <div class="row"><label for="mapDate">datetime</label><select id="mapDate"></select></div>
       <div class="row"><label for="mapNotes">notes</label><select id="mapNotes"></select></div>
       <div class="hint" style="margin-top:6px;">notes column enables right-click → Save with note</div>
     </div>
@@ -169,6 +170,15 @@
       <label>local url cache</label>
       <div class="hint" id="cacheInfo">-</div>
       <button id="refresh" class="ghost" style="margin-top: 6px;">Refresh now</button>
+    </div>
+
+    <div class="panel">
+      <label>configs</label>
+      <div class="btn-row">
+        <button id="exportConfigs" class="ghost">Export Config</button>
+        <button id="importConfigs" class="ghost">Import Config</button>
+      </div>
+      <input id="importFile" type="file" accept=".json,application/json" style="display:none;" />
     </div>
 
     <script type="module" src="index.js"></script>
