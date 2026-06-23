@@ -46,15 +46,12 @@ function a1Range(tabName, col) {
 let legacyMigrated = false;
 async function migrateLegacy() {
   if (legacyMigrated) return;
-  const [synced, local] = await Promise.all([
-    chrome.storage.sync.get(CONFIGS_KEY),
-    chrome.storage.local.get(LEGACY_SETTINGS_KEY),
-  ]);
-  if (!synced[CONFIGS_KEY] && local[LEGACY_SETTINGS_KEY]) {
+  const o = await chrome.storage.local.get([CONFIGS_KEY, LEGACY_SETTINGS_KEY]);
+  if (!o[CONFIGS_KEY] && o[LEGACY_SETTINGS_KEY]) {
     const id = "cfg_" + Date.now().toString(36);
-    const cfg = { ...local[LEGACY_SETTINGS_KEY], name: local[LEGACY_SETTINGS_KEY].sheetName || "default" };
+    const cfg = { ...o[LEGACY_SETTINGS_KEY], name: o[LEGACY_SETTINGS_KEY].sheetName || "default" };
     try {
-      await chrome.storage.sync.set({ [CONFIGS_KEY]: { [id]: cfg }, [ACTIVE_KEY]: id });
+      await chrome.storage.local.set({ [CONFIGS_KEY]: { [id]: cfg }, [ACTIVE_KEY]: id });
       await chrome.storage.local.remove(LEGACY_SETTINGS_KEY);
     } catch (e) {
       console.error("Marksheet migrateLegacy:", e);
@@ -65,7 +62,7 @@ async function migrateLegacy() {
 
 async function getActiveConfig() {
   await migrateLegacy();
-  const o = await chrome.storage.sync.get([CONFIGS_KEY, ACTIVE_KEY]);
+  const o = await chrome.storage.local.get([CONFIGS_KEY, ACTIVE_KEY]);
   const configs = o[CONFIGS_KEY] || {};
   const id = o[ACTIVE_KEY];
   if (!id || !configs[id]) return null;
@@ -205,7 +202,7 @@ let hasActiveConfig = false;
 let activeConfigReady = recomputeHasActive();
 async function recomputeHasActive() {
   try {
-    const o = await chrome.storage.sync.get([CONFIGS_KEY, ACTIVE_KEY]);
+    const o = await chrome.storage.local.get([CONFIGS_KEY, ACTIVE_KEY]);
     const id = o[ACTIVE_KEY];
     const cfg = id && o[CONFIGS_KEY]?.[id];
     hasActiveConfig = !!(cfg?.sheetId && cfg?.tabName && Object.values(cfg.mapping || {}).some(Boolean));
@@ -382,7 +379,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
 // parallel refreshes when the user saves settings rapidly.
 let cacheRefreshTimer = null;
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area !== "local" && area !== "sync") return;
+  if (area !== "local") return;
   if (changes[ACTIVE_KEY] || changes[CONFIGS_KEY]) {
     activeConfigReady = recomputeHasActive();
     clearTimeout(cacheRefreshTimer);

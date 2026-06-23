@@ -186,8 +186,9 @@ async function onSheetChange() {
 }
 
 async function persist() {
+  const data = { [CONFIGS_KEY]: configs, [ACTIVE_KEY]: activeId };
   try {
-    await chrome.storage.sync.set({ [CONFIGS_KEY]: configs, [ACTIVE_KEY]: activeId });
+    await chrome.storage.local.set(data);
   } catch (e) {
     setStatus(`Save failed: ${e.message}`, "err");
   }
@@ -207,16 +208,13 @@ async function updateCacheInfo() {
 
 async function init() {
   try {
-    const [synced, local] = await Promise.all([
-      chrome.storage.sync.get([CONFIGS_KEY, ACTIVE_KEY]),
-      chrome.storage.local.get("settings"),
-    ]);
-    if (synced[CONFIGS_KEY]) {
-      configs = synced[CONFIGS_KEY];
-      activeId = synced[ACTIVE_KEY];
-    } else if (local.settings) {
+    const o = await chrome.storage.local.get([CONFIGS_KEY, ACTIVE_KEY, "settings"]);
+    if (o[CONFIGS_KEY]) {
+      configs = o[CONFIGS_KEY];
+      activeId = o[ACTIVE_KEY];
+    } else if (o.settings) {
       const id = newId();
-      configs = { [id]: { ...local.settings, name: local.settings.sheetName || "default" } };
+      configs = { [id]: { ...o.settings, name: o.settings.sheetName || "default" } };
       activeId = id;
       await persist();
       await chrome.storage.local.remove("settings");
