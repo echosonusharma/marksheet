@@ -13,6 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set version from tag
+        run: |
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+          python3 -c "
+import json
+m = json.load(open('manifest.json'))
+m['version'] = '$VERSION'
+json.dump(m, open('manifest.json', 'w'), indent=2)
+"
+
       - name: Build extension zip
         run: bash build.sh --strip-key
 
