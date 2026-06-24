@@ -17,12 +17,14 @@ jobs:
         run: |
           VERSION="${{ github.ref_name }}"
           VERSION="${VERSION#v}"
-          python3 -c "
-import json
-m = json.load(open('manifest.json'))
-m['version'] = '$VERSION'
-json.dump(m, open('manifest.json', 'w'), indent=2)
-"
+          node -e "
+            const fs = require('fs');
+            const m = JSON.parse(fs.readFileSync('manifest.json'));
+            m.version = process.env.VERSION.replace(/^v/, '');
+            fs.writeFileSync('manifest.json', JSON.stringify(m, null, 2));
+          "
+        env:
+          VERSION: ${{ github.ref_name }}
 
       - name: Build extension zip
         run: bash build.sh --strip-key
